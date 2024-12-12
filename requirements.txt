@@ -4,4 +4,3 @@ python-dotenv
 pydantic
 Markdown>=3.7
 langchain-community
-langchain-core

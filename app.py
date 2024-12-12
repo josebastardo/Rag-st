@@ -13,12 +13,12 @@ app = Flask(__name__)
 
 # Initialize OpenAI client
 client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY"),
-    base_url=os.getenv("OPENAI_BASE_URL")
+    api_key="sk-0137295be18144a39832b785cd182293",
+    base_url="https://api.deepseek.com",
 )
 
 # Initialize TavilySearchResults
-os.environ['TAVILY_API_KEY'] = os.getenv("TAVILY_API_KEY")
+os.environ['TAVILY_API_KEY'] ="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"
 internet_search = TavilySearchResults()
 internet_search.name = "internet_search"
 internet_search.description = "Returns a list of relevant document snippets for a textual query retrieved from the internet."
@@ -65,7 +65,7 @@ def chat():
             # Generate OpenAI response
             openai_response = ""
             for response in client.chat.completions.create(
-                model=os.getenv("OPENAI_MODEL"),
+                model="deepseek-chat",
                 messages=[
                     {"role": m["role"], "content": m["content"]}
                     for m in messages

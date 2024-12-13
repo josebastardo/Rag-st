@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatySUDo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .chat-container {
+            height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        .chat-message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            max-width: 80%;
+        }
+        .user-message {
+            background-color: #e6f3ff;
+            margin-left: auto;
+        }
+        .bot-message {
+            background-color: #f0f2f6;
+            margin-right: auto;
+        }
+        .sidebar {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-md-9 p-4">
+                <h1>📚 Chat con Documentos SUD</h1>
+                <h2>🌟 Ilumina el Mundo</h2>
+                <p>
+                    Barrio Sucre te invita a ser parte de la iniciativa 'Ilumina el Mundo'.
+                    Siguiendo el ejemplo de Jesucristo, podemos compartir Su luz a través del servicio y de amor.
+                    Visita <a href="https://www.iluminaelmundo.org" target="_blank">IluminaElMundo.org</a> para más recursos.
+                </p>
+
+                <div class="chat-container mb-3" id="chatContainer"></div>
+
+                <div class="input-group mb-3">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Escribe tu mensaje aquí...">
+                    <button class="btn btn-primary" type="button" id="sendButton">Enviar</button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-3 p-4">
+                <div class="sidebar">
+                    <h3>📖 Acerca de</h3>
+                    <p>Este chat fue creado para ayudarte a encontrar respuestas en los documentos oficiales de la Iglesia de Jesucristo de los Santos de los Últimos Días.</p>
+                    
+                    <button class="btn btn-danger mb-3" id="clearChat">🗑️ Limpiar Chat</button>
+
+                    <h3>🌟 Ilumina el Mundo</h3>
+                    <h4>¿Cómo puedes participar?</h4>
+                    <ul>
+                        <li>Sirve a tu prójimo siguiendo el ejemplo de Jesucristo</li>
+                        <li>Invita a otros a conocer más sobre el evangelio</li>
+                        <li>Participa en actividades de servicio en tu comunidad</li>
+                    </ul>
+
+                    <h3>👨‍👩‍👧‍👦 FamilySearch</h3>
+                    <p>Descubre tu historia familiar en <a href="https://www.familysearch.org/es/" target="_blank">FamilySearch.org</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const clearChatButton = document.getElementById('clearChat');
+
+        function addMessage(content, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user-message' : 'bot-message'}`;
+            messageDiv.textContent = content;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, true);
+            messageInput.value = '';
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message }),
+                });
+
+                const data = await response.json();
+                addMessage(data.response, false);
+            } catch (error) {
+                addMessage('Lo siento, hubo un error al procesar tu mensaje.', false);
+            }
+
+            messageInput.disabled = false;
+            sendButton.disabled = false;
+            messageInput.focus();
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        clearChatButton.addEventListener('click', () => {
+            chatContainer.innerHTML = '';
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

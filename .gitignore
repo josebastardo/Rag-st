@@ -1,2 +1,7 @@
 *.env
 *.pyc
+<<<<<<< HEAD
+=======
+
+app/
+>>>>>>> cf43bdc51e788179eeb68a10e9ef9adb0336ee0d
